@@ -2,6 +2,7 @@
 use v5.40;
 
 use Getopt::Long::Parser;
+use IO::Compress::Gzip ();
 use JSON::XS;
 use Path::Tiny;
 
@@ -15,6 +16,7 @@ Options:
   -I, --include   exclude packages
   -E, --exclude   include packages
   -O, --output    output file (default: STDOUT)
+  -G, --gzip      turn on gzip compression
   -h, --help      show help
   -v, --version   show version
 
@@ -70,6 +72,7 @@ $parser->getoptionsfromarray(\@ARGV,
     "I|include=s" => \(my $include = ""),
     "E|exclude=s" => \(my $exclude = ""),
     "O|output=s" => \my $output_file,
+    "G|gzip" => \my $gzip_enabled,
     "h|help" => sub (@) { die $HELP },
     "v|version" => sub (@) { printf "v%vd\n", $VERSION; exit },
 ) or exit 1;
@@ -84,6 +87,9 @@ my $output = \*STDOUT;
 if ($output_file) {
     open my $fh, ">", $output_file or die "$output_file: $!\n";
     $output = $fh;
+}
+if ($gzip_enabled) {
+    $output = IO::Compress::Gzip->new($output, -Level => 9, Minimal => 1);
 }
 
 my $index = Index->new(header => $header, include => \%include, exclude => \%exclude);
