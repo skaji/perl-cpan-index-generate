@@ -22,8 +22,8 @@ Options:
   -v, --version   show version
 
 Examples:
-  ❯ perl-cpan-index-generate -E Test::Simple,ExtUtils::MakeMaker ./local/lib/perl5
-  ❯ perl-cpan-index-generate -I URI,LWP ./local/lib/perl5
+  ❯ perl-cpan-index-generate --exclude Test::Simple,ExtUtils::MakeMaker ./local/lib/perl5
+  ❯ perl-cpan-index-generate --include URI,LWP ./local/lib/perl5
 EOF
 
 package Index {
